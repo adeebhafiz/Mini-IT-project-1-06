@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Welcome To MMU Report System</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+          crossorigin=""/>
+
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #2e4053;
+            color: white;
+        }
+
+        h1.title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-top: 30px;
+            position: relative;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+        }
+
+        h1.title::after {
+            content: "";
+            display: block;
+            height: 4px;
+            width: 150px;
+            background: linear-gradient(90deg, #00c6ff, #0072ff);
+            margin: 10px auto 20px;
+            border-radius: 2px;
+        }
+
+        #map-container {
+            margin: 20px auto;
+            max-width: 90%;
+        }
+
+        #map {
+            height: 500px;
+            width: 100%;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+        }
+
+        .content {
+            background: #34495e;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 12px;
+            text-align: center;
+            font-size: 1.1rem;
+        }
+
+        .faculty-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin: 30px auto;
+            padding: 0 20px;
+            max-width: 1200px;
+        }
+
+        .faculty-card {
+            background: #3b4a5a;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            transition: transform 0.3s ease, background 0.3s ease;
+            text-align: center;
+        }
+
+        .faculty-card:hover {
+            transform: translateY(-5px);
+            background: #48667d;
+        }
+
+       
+    </style>
+
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+</head>
+<body>
+
+    <h1 class="title">Welcome To MMU Report System</h1>
+
+    <div id="map-container">
+        <div id="map"></div>
+        <div class="content">Choose which faculty you want to report</div>
+    </div>
+
+    <div class="faculty-grid">
+        <div class="faculty-card">Faculty of Engineering</div>
+        <div class="faculty-card">Faculty of Management</div>
+        <div class="faculty-card">Faculty of Computing & Informatics</div>
+        <div class="faculty-card">Faculty of Creative Multimedia</div>
+    </div>
+
+    <button class="floating-btn">+</button>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+            crossorigin=""></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const map = L.map('map', {
+                center: [2.928382248360098, 101.64194910842981],
+                zoom: 17,
+                dragging: false,
+                touchZoom: true,
+                scrollWheelZoom: false,
+                doubleClickZoom: false,
+                boxZoom: false,
+                keyboard: false,
+                zoomControl: false
+            });
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
+
+            const faculties = [
+                { name: "Faculty Of Engineering", lat: 2.92649490787464, lng: 101.64111890286226 },
+                { name: "Faculty Of Management", lat: 2.930072691861977, lng: 101.64124118455028 },
+                { name: "Faculty Of Computing Information", lat: 2.92917487975636, lng: 101.64060047005056 },
+                { name: "Faculty Of Creative Multimedia", lat: 2.9262563765983227, lng: 101.64318141213448 },
+            ];
+
+            faculties.forEach(faculty => {
+                const marker = L.marker([faculty.lat, faculty.lng])
+                    .addTo(map)
+                    .bindPopup(`<b>${faculty.name}</b><br>Click to report.`);
+            });
+
+            const socket = io();
+            socket.on('connect', function() {
+                console.log('Connected to server via Socket.IO');
+            });
+        });
+    </script>
+
+</body>
+</html>
