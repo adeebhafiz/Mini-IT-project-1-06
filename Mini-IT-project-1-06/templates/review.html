@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Faculty Report</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 30px;
+            font-family: 'Segoe UI', sans-serif;
+            background: #34495e ;
+        }
+
+        .title-box {
+            background-color: #85929e ;
+            color: black;
+            padding: 20px;
+            text-align: center;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 30px;
+        }
+
+        .report-card {
+            background-color: #ffffff;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .report-card h3 {
+            margin: 0 0 10px;
+            color: #333;
+        }
+
+        .report-card p {
+            margin: 6px 0;
+            color: #555;
+        }
+
+        .report-comment {
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #ddd;
+            font-style: italic;
+            color: #444;
+            font-size: 17px; 
+}
+
+        .back-button {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 12px 24px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        .back-button:hover {
+            background-color: #0056b3;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="title-box">
+       ------------- Faculty Report review -------------
+    </div>
+
+    {% for report in reports %}
+        <div class="report-card">
+            <h3>Reporter: Anonymous</h3>
+            <p><strong>Faculty:</strong> {{ report.faculty }}</p>
+            <p><strong>Level:</strong> {{ report.level }}</p>
+            <div class="report-comment">{{ report.problem }}</div>
+        </div>
+    {% endfor %}
+
+    <a href="{{ url_for('home') }}" class="back-button">← Back to Home</a>
+
+</body>
+</html>
