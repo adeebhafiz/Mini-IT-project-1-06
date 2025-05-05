@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>View Suggestions or Complaints</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Open+Sans&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: url('background.jpg') no-repeat center center fixed;
+      background-size: cover;
+      font-family: 'Open Sans', sans-serif;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: white;
+    }
+
+    .container {
+  display: flex; /* Make them line up side by side */
+  gap: 40px; /* Adds space between them */
+  justify-content: center; /* Center horizontally */
+  align-items: center;
+}
+
+.box {
+  background: rgba(0, 0, 0, 0.7);
+  padding: 60px 80px;
+  border-radius: 20px;
+  text-align: center;
+  font-family: 'Bebas Neue', cursive;
+  font-size: 36px;
+  letter-spacing: 2px;
+  cursor: pointer;
+  transition: transform 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+}
+
+.box:hover {
+  transform: scale(1.05);
+  background: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 0 30px rgba(255, 255, 255, 0.6); /* Glow effect */
+}
+
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="box" onclick="location.href='/suggestions'">Suggestions</div>
+    <div class="box" onclick="location.href='/main'">Report</div>
+    
+  </div>
+</body>
+</html>
