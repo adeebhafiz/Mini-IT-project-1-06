@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>MMU Campus Faculty Map</title>
+</head>
+<body>
+    <h1>Campus Map</h1>
+    <!-- Map Image -->
+    <img src="{{ url_for('static', filename='MMU Campus Faculty Map.jpg') }}" usemap="#MMU Campus Faculty Map" alt="MMU Campus Faculty Map" width="600">
+
+    <!-- Clickable Areas -->
+    <map name="MMU Campus Faculty Map">
+        <area shape="poly" coords="50,50,150,150" href="#fci" alt="FCI" title="Faculty of Computing and Informatics">
+        <area shape="poly" coords="200,50,300,150" href="#foe" alt="FOE" title="Faculty of Engineering">
+        <area shape="poly" coords="50,200,150,300" href="#fom" alt="FOM" title="Faculty of Management">
+        <area shape="poly" coords="200,200,300,300" href="#fcm" alt="FCM" title="Faculty Creative Multimedia">
+    </map>
+</body>
+</html>

@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>MMU Campus Map</title>
+    <style>
+
+    .bar {
+        width: 100%;
+        height: 10px;
+        background-color: #002b5c;
+    }
+
+    .container {
+        display: flex;
+        width: 100%vw;
+        height: 100vh;
+    }
+
+    #map {
+        height: calc(100vh - 160px);
+        flex: 2;
+        width: 100%;
+    }
+
+    .bottom-panel {
+        background-color: #58799a;
+        padding: 20px;
+        text-align: center;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .bottom-panel h2 {
+        margin: 0 0 10px;
+    }
+
+    .bottom-panel ul {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .bottom-panel li {
+        margin-bottom: 5px;
+
+    }
+
+         html, body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        font-family: Arial, sans-serif;
+        }
+            #map {
+            width: 55%;  
+            height: 100vh; 
+            flex: 1;  
+            border-top-left-radius: 40% 30%; 
+            border-bottom-right-radius: 40% 30%;  
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <div id="map"><!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+        <script>
+            L_NO_TOUCH = false;
+            L_DISABLE_3D = false;
+        </script>
+    
+    <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
+    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_ba0f23c376d28598ff89b403a31503d5 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+        
+</head>
+</body>
+
+<body>
+    <div class="folium-map" id="map_ba0f23c376d28598ff89b403a31503d5" ></div>
+    <div class="bottom-panel">
+        <h2>Welcome to MMU's Campus Map</h2>
+        <p>Explore the locations of various faculties using the interactive map.</p>
+        <ul>
+            <li>📍 FCI - Faculty of Computing & Informatics</li>
+            <li>📍 FOE - Faculty of Engineering</li>
+            <li>📍 FOM - Faculty of Management</li>
+            <li>📍 FCM - Faculty of Creative Multimedia</li>
+        </ul>
+    </div>
+</div>
+</div>
+</body>
+
+<script>
+    var map_ba0f23c376d28598ff89b403a31503d5 = L.map(
+        "map_ba0f23c376d28598ff89b403a31503d5",
+    {
+    center: [2.927909, 101.6417899],
+    crs: L.CRS.EPSG3857,
+    ...{
+  "maxBounds": [
+[-90,-180,],[90,180,]
+],
+  "zoom": 17,
+  "zoomControl": true,
+  "preferCanvas": false,
+  "dragging": false,
+  "scrollWheelZoom": false,
+}
+
+                }
+            
+            );
+
+            
+
+        
+    
+            var tile_layer_4cf0d2ef16bba9143c65715f0b9ae8f9 = L.tileLayer(
+                "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {
+  "minZoom": 17,
+  "maxZoom": 19,
+  "maxNativeZoom": 19,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+tile_layer_4cf0d2ef16bba9143c65715f0b9ae8f9.addTo(map_ba0f23c376d28598ff89b403a31503d5);
+        
+    
+map_ba0f23c376d28598ff89b403a31503d5.fitBounds(
+[[2.9245, 101.638], [2.9285, 101.6425]],
+{}
+);
+        
+    
+var marker_4a9119c97001c9618b55660eed3bb151 = L.marker(
+[2.9279902960943867, 101.64192865601028],
+{
+}
+).addTo(map_ba0f23c376d28598ff89b403a31503d5);
+        
+    
+var popup_d1b704ed0f2748dbf0cf89b4bd702047 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+var html_35e63bc74053033ad671806e3073af08 = $(`<div id="html_35e63bc74053033ad671806e3073af08" style="width: 100.0%; height: 100.0%;">University of Multimedia</div>`)[0];
+popup_d1b704ed0f2748dbf0cf89b4bd702047.setContent(html_35e63bc74053033ad671806e3073af08);
+            
+        
+marker_4a9119c97001c9618b55660eed3bb151.bindPopup(popup_d1b704ed0f2748dbf0cf89b4bd702047);
+
+var marker_7a113684a0d4ddb93fb528496acbaf28 = L.marker(
+[2.9258793322585515, 101.64247957536298],
+{
+}
+).addTo(map_ba0f23c376d28598ff89b403a31503d5);
+        
+    
+var popup_b3d0840080a40c29190bdf062f7fb4f4 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+var html_3e536d694179d7973b29764c4526a9e5 = $(`<div id="html_3e536d694179d7973b29764c4526a9e5" style="width: 100.0%; height: 100.0%;">This is FCI (Faculty of Applied Communication)</div>`)[0];
+ popup_b3d0840080a40c29190bdf062f7fb4f4.setContent(html_3e536d694179d7973b29764c4526a9e5);
+            
+marker_7a113684a0d4ddb93fb528496acbaf28.bindPopup(popup_b3d0840080a40c29190bdf062f7fb4f4)
+        ;
+ marker_7a113684a0d4ddb93fb528496acbaf28.bindTooltip(
+ `<div>
+    FAC
+</div>`,
+{
+  "sticky": true,
+}
+    );
+        
+var marker_2755608af4a862a5aa6d5a2c5fcb50a9 = L.marker(
+[2.9291064152487003, 101.64058556358161],
+{
+}
+            ).addTo(map_ba0f23c376d28598ff89b403a31503d5);
+        
+    
+        var popup_bef5464e88dcbc581cd3c65ab5ed9a5b = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+var html_425ff681e4098cfcb8bacea3334b820d = $(`<div id="html_425ff681e4098cfcb8bacea3334b820d" style="width: 100.0%; height: 100.0%;">This is FCI (Faculty of Computing & Informatics)</div>`)[0];
+    popup_bef5464e88dcbc581cd3c65ab5ed9a5b.setContent(html_425ff681e4098cfcb8bacea3334b820d);
+            
+        
+
+marker_2755608af4a862a5aa6d5a2c5fcb50a9.bindPopup(popup_bef5464e88dcbc581cd3c65ab5ed9a5b)
+;
+
+marker_2755608af4a862a5aa6d5a2c5fcb50a9.bindTooltip(
+`<div>
+FCI
+</div>`,
+                {
+"sticky": true,
+}
+ );
+        
+    
+var marker_143165aecaff477376c537d92a95c948 = L.marker(
+[2.926426137695205, 101.64143107322919],
+{
+}
+).addTo(map_ba0f23c376d28598ff89b403a31503d5);
+        
+    
+var popup_9397880ed94ca076fdbcc9a669766261 = L.popup({
+"maxWidth": "100%",
+});
+
+        
+            
+var html_6e2eff0536c982cd2de7c7cfd283f4a7 = $(`<div id="html_6e2eff0536c982cd2de7c7cfd283f4a7" style="width: 100.0%; height: 100.0%;">This is FOE (Faculty of Engineering)</div>`)[0];
+popup_9397880ed94ca076fdbcc9a669766261.setContent(html_6e2eff0536c982cd2de7c7cfd283f4a7);
+            
+        
+marker_143165aecaff477376c537d92a95c948.bindPopup(popup_9397880ed94ca076fdbcc9a669766261)
+;
+
+        
+    
+    
+marker_143165aecaff477376c537d92a95c948.bindTooltip(
+`<div>
+FOE
+</div>`,
+                {
+"sticky": true,
+}
+);
+        
+var marker_36cdb0ba8f3a2dff0892d6f099e4f53b = L.marker(
+[2.926225644918432, 101.64235567376333],
+{
+}
+
+).addTo(map_ba0f23c376d28598ff89b403a31503d5);
+        
+    var popup_bdd964c4bbe09f939c8cd05d9b0d7418 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+var html_8952fe89cdd031229ea9d49152ffce1b = $(`<div id="html_8952fe89cdd031229ea9d49152ffce1b" style="width: 100.0%; height: 100.0%;">This is FAC (Faculty of Cinematic Arts)</div>`)[0];
+popup_bdd964c4bbe09f939c8cd05d9b0d7418.setContent(html_8952fe89cdd031229ea9d49152ffce1b);
+            
+        
+
+marker_36cdb0ba8f3a2dff0892d6f099e4f53b.bindPopup(popup_bdd964c4bbe09f939c8cd05d9b0d7418)
+        ;
+
+        
+    
+    
+ marker_36cdb0ba8f3a2dff0892d6f099e4f53b.bindTooltip(
+`<div>
+ FCA
+</div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+var marker_0075a102d650621a6660aa120d238ece = L.marker(
+[2.9300694160511584, 101.64100831840032],
+{
+}
+).addTo(map_ba0f23c376d28598ff89b403a31503d5);
+var popup_26bffecaf7ac4d9a0c02dbf7b9a242f4 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+var html_f53f013dd9df3eb3b78afb607525d160 = $(`<div id="html_f53f013dd9df3eb3b78afb607525d160" style="width: 100.0%; height: 100.0%;">This is FOM (Faculty of Management)</div>`)[0];
+popup_26bffecaf7ac4d9a0c02dbf7b9a242f4.setContent(html_f53f013dd9df3eb3b78afb607525d160);
+            
+        
+marker_0075a102d650621a6660aa120d238ece.bindPopup(popup_26bffecaf7ac4d9a0c02dbf7b9a242f4)
+;
+
+        
+    
+    
+marker_0075a102d650621a6660aa120d238ece.bindTooltip(
+`<div>
+ FOM
+</div>`,
+{
+  "sticky": true,
+}
+            );
+        
+    
+var marker_4333d02f06c10463ab7eb83247bfe803 = L.marker(
+    [2.9261424404170127, 101.64317171677455],
+{
+}
+).addTo(map_ba0f23c376d28598ff89b403a31503d5);
+        
+    
+var popup_1baafd38cb79338a9c474e749526bf24 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+var html_7a18e0f7b987403a7f4938098b0c31b8 = $(`<div id="html_7a18e0f7b987403a7f4938098b0c31b8" style="width: 100.0%; height: 100.0%;">This is FCM (Faculty of Creative Multimedia)</div>`)[0];
+popup_1baafd38cb79338a9c474e749526bf24.setContent(html_7a18e0f7b987403a7f4938098b0c31b8);
+            marker_4333d02f06c10463ab7eb83247bfe803.bindPopup(popup_1baafd38cb79338a9c474e749526bf24)
+        ;
+
+        
+    
+marker_4333d02f06c10463ab7eb83247bfe803.bindTooltip(
+`<div>
+     FCM
+</div>`,
+{
+  "sticky": true,
+}
+            );
+        
+</script>
+
+</body>
+</html>
