@@ -96,7 +96,7 @@ full_html = f"""
     </style>
 </head>
 </html>
-"""
+
 
 with open("mmu_campus_map_custom_55.html", "w", encoding="utf-8") as f:
     f.write(full_html)

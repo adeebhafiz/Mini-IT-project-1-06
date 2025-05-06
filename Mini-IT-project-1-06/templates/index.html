@@ -80,7 +80,6 @@
                 return;
             }
 
-            
             document.getElementById('submit-btn').disabled = true;
             document.querySelector('.loading').style.display = 'inline-block';
 
@@ -98,14 +97,12 @@
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    
                     document.getElementById('confirmation-message').style.display = 'block';
                     setTimeout(() => {
                         window.location.href = "/suggestions";
-                    }, 2000); // 
+                    }, 2000); // Redirect after 2 seconds
                 } else {
                     alert('Error submitting suggestion');
-                    
                     document.getElementById('submit-btn').disabled = false;
                     document.querySelector('.loading').style.display = 'none';
                 }
@@ -119,6 +116,9 @@
     </script>
 </body>
 </html>
+
+
+
 
 
 
