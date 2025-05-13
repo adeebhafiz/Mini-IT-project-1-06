@@ -94,7 +94,7 @@
             <div class="faculty-note">Reporting to: <strong>{{ request.args.get('faculty') }}</strong></div>
         {% endif %}
 
-        <form action="/submit" method="post">
+        <form action="{{ url_for('submit') }}" method="post">
             <input type="hidden" name="faculty" value="{{ request.args.get('faculty') }}">
 
             <label for="level">What level is the problem?</label>
@@ -106,8 +106,7 @@
             <button type="submit">Submit Report</button>
         </form>
 
-        
-        <form action="/review" method="get">
+        <form action="{{ url_for('review') }}" method="get">
             <button type="submit" class="review-button">Review Reports</button>
         </form>
     </div>

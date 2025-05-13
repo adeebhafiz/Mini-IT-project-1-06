@@ -8,11 +8,11 @@
             margin: 0;
             padding: 30px;
             font-family: 'Segoe UI', sans-serif;
-            background: #34495e ;
+            background: #34495e;
         }
 
         .title-box {
-            background-color: #85929e ;
+            background-color: #85929e;
             color: black;
             padding: 20px;
             text-align: center;
@@ -47,8 +47,8 @@
             border-top: 1px solid #ddd;
             font-style: italic;
             color: #444;
-            font-size: 17px; 
-}
+            font-size: 17px;
+        }
 
         .back-button {
             display: inline-block;
@@ -65,18 +65,17 @@
         .back-button:hover {
             background-color: #0056b3;
         }
-
     </style>
 </head>
 <body>
 
     <div class="title-box">
-       ------------- Faculty Report review -------------
+        ------------- Faculty Report Review -------------
     </div>
 
     {% for report in reports %}
         <div class="report-card">
-            <h3>Reporter: Anonymous</h3>
+            <h3>Reporter: {{ report.user.username }}</h3>
             <p><strong>Faculty:</strong> {{ report.faculty }}</p>
             <p><strong>Level:</strong> {{ report.level }}</p>
             <div class="report-comment">{{ report.problem }}</div>
