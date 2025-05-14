@@ -42,14 +42,17 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
       <h2 class="mb-0">All Suggestions</h2>
       <div class="dropdown">
-        <button class="btn btn-primary dropdown-toggle" type="button" id="filterDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-          <i class="fas fa-filter me-1"></i> Filter
+        <button class="btn btn-primary dropdown-toggle" type="button" id="SortDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+          <i class="fas fa-filter me-1"></i> Sort
         </button>
         
         </button>
-        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="filterDropdown">
+        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="SortDropdown">
           <li><a class="dropdown-item" href="#" onclick="sortByVotes()"><i class="fas fa-arrow-up-wide-short me-2"></i> Upvoted</a></li>
-          <li><a class="dropdown-item" href="#"><i class="fas fa-list-check me-2"></i> Status</a></li>
+          <li><a class="dropdown-item" href="#" onclick="sortByStatus()">
+  <i class="fas fa-list-check me-2"></i> Status
+</a></li>
+
         </ul>        
       </div>
     </div>
@@ -66,6 +69,14 @@
       <p class="card-text">{{ post.reason }}</p>
       <button class="btn btn-sm btn-success" onclick="upvote({{ post.id }})">Upvote</button>
       <span id="votes-{{ post.id }}">{{ post.votes }} votes</span>
+<span class="badge bg-secondary ms-2 status-badge" data-status="{{ post.status|default('Pending') }}">
+  {% if post.status %}
+    {{ post.status }}
+  {% else %}
+    Pending ⏳
+  {% endif %}
+</span>
+
     </div>
   </div>
   {% endfor %}
@@ -101,7 +112,22 @@
     postsContainer.innerHTML = '';
     cards.forEach(card => postsContainer.appendChild(card));
   }
-  </script>
+
+  function sortByStatus() {
+    const postsContainer = document.getElementById('posts');
+    const cards = Array.from(postsContainer.getElementsByClassName('card'));
+
+    cards.sort((a, b) => {
+      const statusA = a.querySelector('.status-badge').getAttribute('data-status').toLowerCase();
+      const statusB = b.querySelector('.status-badge').getAttribute('data-status').toLowerCase();
+      return statusA.localeCompare(statusB);
+    });
+
+    postsContainer.innerHTML = '';
+    cards.forEach(card => postsContainer.appendChild(card));
+  }
+
+</script>
 
 </body>
 </html>   

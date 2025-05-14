@@ -20,6 +20,7 @@ class Suggestion(db.Model):
     reason = db.Column(db.Text, nullable=False)
     faculty = db.Column(db.String(50), nullable=False)
     votes = db.Column(db.Integer, default=0)
+    status     = db.Column(db.String(32), nullable=False, default='Pending ⏳')
     
 
 
@@ -35,6 +36,7 @@ def submit_suggestion():
     suggestion = request.json['suggestion']
     reason = request.json['reason']
     faculty = request.json['faculty']
+
 
     
     print(f"Received suggestion: {suggestion}, reason: {reason}, faculty: {faculty}")
@@ -72,6 +74,26 @@ def upvote(id):
         return jsonify(success=True, votes=suggestion.votes)
     else:
         return jsonify(success=False)
+
+@app.route('/admin_suggestions')
+def admin_suggestions():
+    posts = Suggestion.query.all()  # Fetch all suggestions from the database
+    return render_template('admin_suggestions.html', posts=posts)
+
+
+@app.route('/admin/update_status/<int:post_id>', methods=['POST'])
+def update_status(post_id):
+    data = request.get_json()
+    new_status = data.get('status')
+
+    if new_status not in ['Approved', 'Under Review', 'Declined']:
+        return jsonify(success=False), 400
+
+    suggestion = Suggestion.query.get_or_404(post_id)
+    suggestion.status = new_status
+    db.session.commit()
+    return jsonify(success=True)
+
 
 if __name__ == '__main__':
     app.run(debug=True)
