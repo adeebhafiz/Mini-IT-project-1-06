@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin - Student Complaints</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Open+Sans&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Open Sans', sans-serif;
+      background: linear-gradient(135deg, #74ebd5, #acb6e5);
+      color: #333;
+    }
+
+    header {
+      background: #1a237e;
+      padding: 20px;
+      color: white;
+      text-align: center;
+      font-family: 'Bebas Neue', cursive;
+      font-size: 48px;
+      letter-spacing: 2px;
+      position: relative;
+    }
+
+    .dropdown {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+    }
+
+    .dropbtn {
+      background-color: #3949ab;
+      color: white;
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      cursor: pointer;
+      border-radius: 5px;
+      display: flex;
+      align-items: center;
+    }
+
+    .dropbtn::after {
+      content: "▼";
+      font-size: 10px;
+      margin-left: 8px;
+    }
+
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      background-color: white;
+      min-width: 120px;
+      box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
+      z-index: 1;
+      border-radius: 5px;
+      overflow: hidden;
+      right: 0;
+    }
+
+    .dropdown-content a {
+      font-size: 14px;
+      color: #333;
+      padding: 10px 15px;
+      text-decoration: none;
+      display: block;
+    }
+
+    .dropdown-content a:hover {
+      background-color: #f1f1f1;
+    }
+
+    .dropdown:hover .dropdown-content {
+      display: block;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 40px auto;
+      padding: 20px;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .complaint {
+      border-left: 5px solid #1a73e8;
+      padding: 15px 20px;
+      margin-bottom: 20px;
+      background: #e3f2fd;
+      border-radius: 5px;
+      position: relative;
+    }
+
+    .complaint h3 {
+      margin: 0 0 10px;
+      font-size: 20px;
+      color: #1a73e8;
+    }
+
+    .complaint p {
+      margin: 5px 0;
+    }
+
+    .votes {
+      font-size: 12px;
+      color: #666;
+      margin-top: 8px;
+    }
+
+    .timestamp {
+      font-size: 13px;
+      color: #555;
+      text-align: right;
+    }
+
+    .status-dropdown {
+      position: absolute;
+      top: 15px;
+      right: 20px;
+    }
+
+    .status-button {
+      background-color: white;
+      border: 1px solid #ccc;
+      padding: 6px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+    }
+
+    .status-button .circle {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      margin-right: 8px;
+    }
+
+    .status-options {
+      display: none;
+      position: absolute;
+      background: #fff;
+      top: 35px;
+      right: 0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      z-index: 10;
+    }
+
+    .status-options div {
+      padding: 8px 12px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .status-options div:hover {
+      background-color: #f1f1f1;
+    }
+
+    .approved { background-color: #4caf50; }
+    .review { background-color: #ffeb3b; }
+    .declined { background-color: #f44336; }
+
+    @media (max-width: 600px) {
+      header {
+        font-size: 32px;
+        text-align: center;
+      }
+
+      .dropdown {
+        top: 10px;
+        right: 10px;
+      }
+
+      .status-dropdown {
+        position: static;
+        margin-top: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="dropdown">
+      <button class="dropbtn">Sort</button>
+      <div class="dropdown-content">
+        <a href="#" onclick="sortByVotes()">Upvoted</a>
+      </div>
+    </div>
+    📋 Admin - Student Complaints
+  </header>
+
+  <div class="container" id="complaintContainer">
+
+    <!-- Complaint 1 -->
+    <div class="complaint" data-votes="10" data-status="review">
+      <h3>hi331 (hi@331.edu)</h3>
+      <p><strong>Complaint:</strong> The starbees food quality has dropped significantly.</p>
+      <div class="status-dropdown">
+        <div class="status-button" onclick="toggleStatusMenu(this)">
+          <div class="circle review"></div> In Review
+        </div>
+        <div class="status-options">
+          <div onclick="updateStatus(this, 'review')"><div class="circle review"></div> In Review</div>
+          <div onclick="updateStatus(this, 'approved')"><div class="circle approved"></div> Approved</div>
+          <div onclick="updateStatus(this, 'declined')"><div class="circle declined"></div> Declined</div>
+        </div>
+      </div>
+      <div class="votes">Votes: 10</div>
+      <div class="timestamp">Submitted on: 2025-05-11 10:20</div>
+    </div>
+
+    <!-- Complaint 2 -->
+    <div class="complaint" data-votes="4" data-status="declined">
+      <h3>John Doe (john@example.com)</h3>
+      <p><strong>Complaint:</strong> The air conditioning in CQAR 1001 is not working properly.</p>
+      <div class="status-dropdown">
+        <div class="status-button" onclick="toggleStatusMenu(this)">
+          <div class="circle declined"></div> Declined
+        </div>
+        <div class="status-options">
+          <div onclick="updateStatus(this, 'review')"><div class="circle review"></div> In Review</div>
+          <div onclick="updateStatus(this, 'approved')"><div class="circle approved"></div> Approved</div>
+          <div onclick="updateStatus(this, 'declined')"><div class="circle declined"></div> Declined</div>
+        </div>
+      </div>
+      <div class="votes">Votes: 4</div>
+      <div class="timestamp">Submitted on: 2025-05-10 14:32</div>
+    </div>
+
+    <!-- Complaint 3 -->
+    <div class="complaint" data-votes="7" data-status="approved">
+      <h3>Ginelle Gomez (ggomez@uni.com)</h3>
+      <p><strong>Complaint:</strong> Wi-Fi in the library is very slow during peak hours.</p>
+      <div class="status-dropdown">
+        <div class="status-button" onclick="toggleStatusMenu(this)">
+          <div class="circle approved"></div> Approved
+        </div>
+        <div class="status-options">
+          <div onclick="updateStatus(this, 'review')"><div class="circle review"></div> In Review</div>
+          <div onclick="updateStatus(this, 'approved')"><div class="circle approved"></div> Approved</div>
+          <div onclick="updateStatus(this, 'declined')"><div class="circle declined"></div> Declined</div>
+        </div>
+      </div>
+      <div class="votes">Votes: 7</div>
+      <div class="timestamp">Submitted on: 2025-05-12 09:15</div>
+    </div>
+
+    <!-- Complaint 4 -->
+    <div class="complaint" data-votes="6" data-status="declined">
+      <h3>Ahmed Yusuf (ayusuf@university.edu)</h3>
+      <p><strong>Complaint:</strong> There is no vegetarian option in the cafeteria on Fridays.</p>
+      <div class="status-dropdown">
+        <div class="status-button" onclick="toggleStatusMenu(this)">
+          <div class="circle declined"></div> Declined
+        </div>
+        <div class="status-options">
+          <div onclick="updateStatus(this, 'review')"><div class="circle review"></div> In Review</div>
+          <div onclick="updateStatus(this, 'approved')"><div class="circle approved"></div> Approved</div>
+          <div onclick="updateStatus(this, 'declined')"><div class="circle declined"></div> Declined</div>
+        </div>
+      </div>
+      <div class="votes">Votes: 6</div>
+      <div class="timestamp">Submitted on: 2025-05-08 16:05</div>
+    </div>
+
+  </div>
+
+  <script>
+    function sortByVotes() {
+      const container = document.getElementById('complaintContainer');
+      const complaints = Array.from(container.getElementsByClassName('complaint'));
+
+      complaints.sort((a, b) => {
+        const votesA = parseInt(a.getAttribute('data-votes'));
+        const votesB = parseInt(b.getAttribute('data-votes'));
+        return votesB - votesA;
+      });
+
+      complaints.forEach(complaint => container.appendChild(complaint));
+    }
+
+    function toggleStatusMenu(button) {
+      const allMenus = document.querySelectorAll('.status-options');
+      allMenus.forEach(menu => {
+        if (!menu.contains(button)) menu.style.display = 'none';
+      });
+
+      const dropdown = button.nextElementSibling;
+      dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+    }
+
+    function updateStatus(optionElement, status) {
+      const statusButton = optionElement.parentElement.previousElementSibling;
+      const complaint = optionElement.closest('.complaint');
+
+      let text = '';
+      let colorClass = '';
+
+      switch (status) {
+        case 'review':
+          text = 'In Review';
+          colorClass = 'review';
+          break;
+        case 'approved':
+          text = 'Approved';
+          colorClass = 'approved';
+          break;
+        case 'declined':
+          text = 'Declined';
+          colorClass = 'declined';
+          break;
+      }
+
+      complaint.setAttribute('data-status', status);
+      statusButton.innerHTML = `<div class="circle ${colorClass}"></div> ${text}`;
+      optionElement.parentElement.style.display = 'none';
+    }
+
+    window.addEventListener('click', function(e) {
+      if (!e.target.closest('.status-dropdown')) {
+        document.querySelectorAll('.status-options').forEach(menu => {
+          menu.style.display = 'none';
+        });
+      }
+    });
+  </script>
+</body>
+</html>
