@@ -1,127 +1,260 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Admin Suggestions</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>All Suggestions - Admin</title>
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"
+  />
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+  />
   <style>
     body {
-      background-color: #f8f9fa;
+      background-color: #f0f2f5;
     }
-
-    .container {
-      max-width: 800px;
-      margin: auto;
-    }
-
     .card {
-      position: relative;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-      background-color: #fff;
-      padding: 1rem;
+      border-radius: 15px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+    }
+    .card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+      background-color: #ffffff;
+    }
+    .dropdown-menu {
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    .dropdown-item:hover {
+      background-color: #f0f2f5;
+      color: #0d6efd;
+      font-weight: 500;
+    }
+    .suggestion-card {
+      transition: all 0.4s ease-in-out;
+    }
+    .suggestion-card .comment-box {
+      max-height: 300px;
+      overflow-y: auto;
+      transition: opacity 0.3s ease-in-out;
     }
 
-    .status-dropdown {
-      position: absolute;
-      bottom: 1rem;
-      right: 1rem;
+    /* Make Filter button match Sort button styling */
+    .btn-primary {
+      transition: box-shadow 0.3s ease;
     }
 
-    .card-body > h5 {
-      margin-bottom: 0.5rem;
-    }
-
-    .card-body > p {
-      margin-bottom: 1rem;
-    }
-
-    .badge {
-      font-size: 0.85rem;
-      vertical-align: middle;
+    .btn-primary:hover,
+    .btn-primary:focus {
+      background-color: #0d6efd; /* keep blue */
+      box-shadow: 0 4px 12px rgba(13, 110, 253, 0.4); /* subtle blue shadow */
+      color: #fff;
     }
   </style>
 </head>
+
 <body>
-<div class="container mt-5">
-  <div class="d-flex justify-content-between mb-4">
-    <h2>Admin: Suggestions</h2>
-    <div class="dropdown">
-      <button class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown">
-        <i class="fas fa-filter"></i> Sort
+  <div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+  <h2 class="mb-0">All Suggestions (Admin)</h2>
+
+  <!-- Begin Buttons Container -->
+  <div class="d-flex">
+    <!-- Search bar -->
+    <div class="input-group me-2" style="max-width: 250px;">
+      <input type="text" id="searchInput" onkeyup="filterSuggestions()" class="form-control" placeholder="Search suggestions..." />
+      <span class="input-group-text"><i class="fas fa-search"></i></span>
+    </div>
+
+    <!-- Filter Button -->
+    <div class="dropdown me-2">
+      <button
+        class="btn btn-primary dropdown-toggle"
+        type="button"
+        id="facultyDropdownBtn"
+        data-bs-toggle="dropdown"
+        aria-expanded="false"
+      >
+        Filter by Faculty: <span id="selectedFaculty">All Faculties</span>
       </button>
-      <ul class="dropdown-menu">
-        <li><a class="dropdown-item" href="#" onclick="sortByVotes()">Sort by Votes</a></li>
+      <ul class="dropdown-menu" aria-labelledby="facultyDropdownBtn" id="facultyDropdownMenu">
+        <li><a class="dropdown-item active" href="#" data-faculty="All">All Faculties</a></li>
+        <li><a class="dropdown-item" href="#" data-faculty="FCI">FCI</a></li>
+        <li><a class="dropdown-item" href="#" data-faculty="FOE">FOE</a></li>
+        <li><a class="dropdown-item" href="#" data-faculty="FOM">FOM</a></li>
+        <li><a class="dropdown-item" href="#" data-faculty="FCM">FCM</a></li>
       </ul>
     </div>
-  </div>
 
-  <div id="posts">
-    {% for post in posts %}
-    <div class="card mb-4" data-id="{{ post.id }}" data-votes="{{ post.votes }}">
-      <div class="card-body">
-        <h5>{{ post.suggestion }}</h5>
-        <h6 class="text-muted">{{ post.faculty }}</h6>
-        <p>{{ post.reason }}</p>
-
-        <div class="d-flex align-items-center mt-2">
-          <button class="btn btn-sm btn-success me-2" disabled>
-            <i class="fas fa-thumbs-up"></i> Upvote
-          </button>
-          <span class="me-2">{{ post.votes }} votes</span>
-          <span class="badge bg-secondary" id="badge-{{ post.id }}">
-            {{ post.status | default('Pending ⏳') }}
-          </span>
-        </div>
-
-        <div class="dropdown status-dropdown">
-          <button class="btn btn-outline-primary btn-sm dropdown-toggle" data-bs-toggle="dropdown">
-            Update Status
-          </button>
-          <ul class="dropdown-menu">
-            {% for option in ['Approved', 'Under Review', 'Declined'] %}
-            <li>
-              <a class="dropdown-item" href="#" onclick="updateStatus({{ post.id }}, '{{ option }}')">
-                {{ option }}
-              </a>
-            </li>
-            {% endfor %}
-          </ul>
-        </div>
-      </div>
+    <!-- Sort Button -->
+    <div class="dropdown">
+      <button
+        class="btn btn-primary dropdown-toggle"
+        type="button"
+        id="SortDropdown"
+        data-bs-toggle="dropdown"
+        aria-expanded="false"
+      >
+        <i class="fas fa-filter me-1"></i> Sort
+      </button>
+      <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="SortDropdown">
+        <li><a class="dropdown-item" href="#" onclick="sortByVotes()"><i class="fas fa-arrow-up-wide-short me-2"></i> Upvoted</a></li>
+        <li><a class="dropdown-item" href="#" onclick="sortByStatus()"><i class="fas fa-list-check me-2"></i> Status</a></li>
+      </ul>
     </div>
-    {% endfor %}
-  </div>
+  </div> 
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-  function sortByVotes() {
-    const posts = [...document.querySelectorAll('.card')];
-    posts.sort((a, b) => b.dataset.votes - a.dataset.votes);
-    posts.forEach(p => document.getElementById('posts').appendChild(p));
-  }
 
-  function updateStatus(id, newStatus) {
-    fetch(`/admin/update_status/${id}`, {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({ status: newStatus })
-    })
-    .then(response => response.json())
-    .then(data => {
-      if (data.success) {
-        document.getElementById(`badge-${id}`).textContent = newStatus;
-      } else {
-        alert("Failed to update status.");
+
+    <div id="posts">
+      {% for post in posts %}
+      <div class="card mb-3 suggestion-card"
+     data-id="{{ post.id }}"
+     data-votes="{{ post.votes }}"
+     data-search="{{ post.suggestion }} {{ post.faculty }} {{ post.reason }}">
+        <div class="card-body">
+          <h5 class="card-title">{{ post.suggestion }}</h5>
+          <h6 class="card-subtitle mb-2 text-muted">{{ post.faculty }}</h6>
+          <p>{{ post.reason }}</p>
+          <span class="text-muted" id="votes-{{ post.id }}">{{ post.votes }} votes</span>
+          <span class="badge bg-secondary ms-2">{{ post.status or 'Pending ⏳' }}</span>
+
+          <!-- Admin can update status -->
+          <select class="form-select form-select-sm mt-2" onchange="updateStatus({{ post.id }}, this.value)">
+            <option value="Pending ⏳" {% if post.status == 'Pending ⏳' %}selected{% endif %}>Pending ⏳</option>
+            <option value="In Progress 🔧" {% if post.status == 'In Progress 🔧' %}selected{% endif %}>In Progress 🔧</option>
+            <option value="Accepted ✅" {% if post.status == 'Accepted ✅' %}selected{% endif %}>Accepted ✅</option>
+            <option value="Rejected ❌" {% if post.status == 'Rejected ❌' %}selected{% endif %}>Rejected ❌</option>
+          </select>
+
+          <button class="btn btn-link mt-2" onclick="toggleCard(this)">View Comments</button>
+
+          <div class="comment-box mt-3 d-none">
+            <div class="comments mb-3" id="comments-{{ post.id }}"></div>
+            {% if current_user.role == 'admin' %}
+            <form method="POST" action="/comment/{{ post.id }}">
+              <textarea name="content" class="form-control mb-2" required></textarea>
+              <button class="btn btn-sm btn-primary" type="submit">Add Comment</button>
+            </form>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <script>
+    // Toggle comment box visibility and fetch comments on first open
+    function toggleCard(btn) {
+      const cardBody = btn.closest('.card-body');
+      const commentBox = cardBody.querySelector('.comment-box');
+      commentBox.classList.toggle('d-none');
+      if (!commentBox.classList.contains('loaded')) {
+        const postId = cardBody.closest('.card').dataset.id;
+        fetch(`/get_comments/${postId}`)
+          .then(res => res.json())
+          .then(data => {
+            const commentsContainer = commentBox.querySelector('.comments');
+            commentsContainer.innerHTML = data.map(c =>
+              `<p><strong>${c.username}:</strong> ${c.content} <br><small class="text-muted">${c.timestamp}</small></p>`
+            ).join('');
+            commentBox.classList.add('loaded');
+          });
+      }
+    }
+
+    // Update suggestion status via POST fetch
+    function updateStatus(postId, newStatus) {
+      fetch(`/admin/update_status/${postId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ status: newStatus })
+      });
+    }
+
+    // Sort cards by votes descending
+    function sortByVotes() {
+      const cards = Array.from(document.querySelectorAll('.suggestion-card'));
+      cards.sort((a, b) => parseInt(b.dataset.votes) - parseInt(a.dataset.votes));
+      const container = document.getElementById('posts');
+      container.innerHTML = '';
+      cards.forEach(card => container.appendChild(card));
+    }
+
+    // Sort cards alphabetically by status
+    function sortByStatus() {
+      const cards = Array.from(document.querySelectorAll('.suggestion-card'));
+      cards.sort((a, b) => {
+        const statusA = a.querySelector('select').value;
+        const statusB = b.querySelector('select').value;
+        return statusA.localeCompare(statusB);
+      });
+      const container = document.getElementById('posts');
+      container.innerHTML = '';
+      cards.forEach(card => container.appendChild(card));
+    }
+
+    // Filter cards by faculty & update button text + active highlight
+    const facultyDropdownMenu = document.getElementById('facultyDropdownMenu');
+    const selectedFacultySpan = document.getElementById('selectedFaculty');
+
+    facultyDropdownMenu.addEventListener('click', (e) => {
+      e.preventDefault();
+      const target = e.target;
+      if (target.classList.contains('dropdown-item')) {
+        const faculty = target.dataset.faculty;
+        filterByFaculty(faculty);
+
+        // Update active class
+        facultyDropdownMenu.querySelectorAll('.dropdown-item').forEach(item => {
+          item.classList.remove('active');
+        });
+        target.classList.add('active');
+
+        // Update button text
+        selectedFacultySpan.textContent = faculty === 'All' ? 'All Faculties' : faculty;
       }
     });
-  }
-</script>
+
+    function filterByFaculty(faculty) {
+      const cards = document.querySelectorAll('.suggestion-card');
+      cards.forEach(card => {
+        const cardFaculty = card.querySelector('.card-subtitle').textContent.trim();
+        if (faculty === 'All' || cardFaculty === faculty) {
+          card.style.display = 'block';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+
+function filterSuggestions() {
+  const query = document.getElementById("searchInput").value.toLowerCase();
+  const cards = document.querySelectorAll(".suggestion-card");
+
+  cards.forEach(card => {
+    const searchText = card.getAttribute("data-search").toLowerCase();
+    card.style.display = searchText.includes(query) ? "block" : "none";
+  });
+}
+
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
+
+
+
+
+
 
