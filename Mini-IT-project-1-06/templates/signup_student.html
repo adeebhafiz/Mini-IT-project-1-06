@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Student SignUp</title>
+  <style>
+    body {
+      background: url("background.jpg") no-repeat center center fixed;
+      background-size: cover;
+      font-family: 'Open Sans', sans-serif;
+      height: 100vh;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+    }
+
+    .form-box {
+      background: rgba(0, 0, 0, 0.6);
+      padding: 40px;
+      border-radius: 20px;
+      text-align: center;
+      width: 350px;
+    }
+
+    .form-box h2 {
+      margin-bottom: 20px;
+      font-size: 32px;
+    }
+
+    .form-box input {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+    }
+
+    .form-box button {
+      margin-top: 20px;
+      background: #ff5733;
+      color: white;
+      padding: 14px 28px;
+      font-size: 22px;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background 0.3s;
+    }
+
+    .form-box button:hover {
+      background: #e14b2e;
+    }
+
+    .flash {
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 10px;
+      font-size: 16px;
+    }
+
+    .flash.success {
+      background-color: #28a745;
+      color: #fff;
+    }
+
+    .flash.danger {
+      background-color: #dc3545;
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+  <div class="form-box">
+    <h2>Student SignUp</h2>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="flash {{ category }}">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <form method="POST" action="{{ url_for('signup') }}">
+      <input type="text" name="username" placeholder="Username" required />
+      <input type="email" name="email" placeholder="Email" required />
+      <input type="password" name="password" placeholder="Password" required />
+      <input type="password" name="confirm_password" placeholder="Confirm Password" required />
+      <button type="submit">PROCEED</button>
+    </form>
+  </div>
+</body>
+</html>

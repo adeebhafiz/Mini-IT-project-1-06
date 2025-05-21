@@ -1,0 +1,35 @@
+from flask import Flask, request, jsonify
+from flask_sqlalchemy import SQLAlchemy
+import os
+
+app = Flask(__name__)
+
+# Path to your SQLite database
+basedir = os.path.abspath(os.path.dirname(__file__))
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'database.db')
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+db = SQLAlchemy(app)
+
+# Example table
+class Report(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(100))
+    description = db.Column(db.Text)
+
+# Home route
+@app.route('/')
+def home():
+    return 'University Report System is running!'
+
+# Example: Add report
+@app.route('/report', methods=['POST'])
+def add_report():
+    data = request.json
+    new_report = Report(title=data['title'], description=data['description'])
+    db.session.add(new_report)
+    db.session.commit()
+    return jsonify({'message': 'Report submitted successfully!'})
+
+if __name__ == '__main__':
+    app.run(debug=True)
