@@ -7,7 +7,7 @@ center_latlon = ox.geocode(place)
 sw_bound = [2.9245, 101.6380] 
 ne_bound = [2.9285, 101.6425]  
 
-campus_map = folium.Map(
+campus_map = folium.Map( 
     location=center_latlon,  
     zoom_start=17,           
     min_zoom=17,             
@@ -85,23 +85,29 @@ full_html = f"""
             font-family: Arial, sans-serif;
         }}
         #map {{
-            width: 55%;  
-            height: 100vh; 
-            flex: 1;  
-            border-top-left-radius: 40% 30%;  
-            border-bottom-right-radius: 40% 30%;  
-            box-shadow: 0 6px 30px rgba(0, 0, 0, 0.15); 
+            width: 55%;
+            height: 100vh;
+            flex: 1;
+            border-top-left-radius: 40% 30%;
+            border-bottom-right-radius: 40% 30%;
+            box-shadow: 0 6px 30px rgba(0, 0, 0, 0.15);
         }}
-    
     </style>
 </head>
+<body>
+    <div id="map">
+        {map_html}
+    </div>
+</body>
 </html>
 """
+
+
 
 with open("mmu_campus_map_custom_55.html", "w", encoding="utf-8") as f:
     f.write(full_html)
 
-print("MMU campus map with smooth, organic shape and 55% screen width saved as 'mmu_campus_map_.html'")
+print("MMU campus map with smooth, organic shape and 55% screen width saved as 'mmu_campus_map_.html'") 
 
 
 
