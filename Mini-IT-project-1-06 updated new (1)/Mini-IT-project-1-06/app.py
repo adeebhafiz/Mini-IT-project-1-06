@@ -7,12 +7,13 @@ from flask_login import LoginManager, UserMixin, login_user, logout_user, login_
 from datetime import datetime
 import os
 import uuid
+from sqlalchemy import func # <-- ADDED THIS IMPORT
 
-# --- Configuration ---
-UPLOAD_FOLDER = 'static/uploads'
+# Configuration
+UPLOAD_FOLDER = 'static', 'uploads'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
-# Initialize extensions (not tied to app yet)
+# Initialize extensions
 db = SQLAlchemy()
 socketio = SocketIO()
 login_manager = LoginManager()
@@ -60,13 +61,11 @@ class Report(db.Model):
     date_created = db.Column(db.DateTime, default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
-    # Status tracking
-    status = db.Column(db.String(50), default='in progress')  # e.g., "in progress", "succeed", "failed"
-    assigned_to = db.Column(db.String(100))  # Optional: Who is handling the report
+    status = db.Column(db.String(50), default='in progress')
+    assigned_to = db.Column(db.String(100))
 
     user = db.relationship('User', back_populates='reports')
     comments = db.relationship('ReportComment', back_populates='report', cascade='all, delete-orphan')
-
 
 class ReportComment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -115,7 +114,6 @@ class Vote(db.Model):
         db.UniqueConstraint('user_id', 'suggestion_id', name='unique_user_suggestion_vote'),
     )
 
-
 # App Factory
 def create_app():
     app = Flask(__name__)
@@ -124,8 +122,6 @@ def create_app():
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
     app.config['MAX_CONTENT_LENGTH'] = 2 * 1024 * 1024  # 2 MB max file size
-
-    os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
     db.init_app(app)
     socketio.init_app(app)
@@ -210,7 +206,7 @@ def register_routes(app):
             image_filename = filename
 
         new_report = Report(faculty=faculty, level=level, problem=problem,
-                            image_filename=image_filename, user=current_user)
+                             image_filename=image_filename, user=current_user)
         try:
             db.session.add(new_report)
             db.session.commit()
@@ -239,6 +235,7 @@ def register_routes(app):
         return render_template('review.html', reports=reports)
 
     @app.route('/report/<int:report_id>/user_messages')
+    @login_required
     def get_user_messages(report_id):
         report = Report.query.get_or_404(report_id)
         comments = [{
@@ -332,11 +329,13 @@ def register_routes(app):
         return render_template('viewadmin.html')
     
     @app.route('/suggest_admin')
+    @login_required
     def suggest_admin():
         # Render the Suggest Admin page
         return render_template('map.html')
     
     @app.route('/admin_suggest')
+    @login_required
     def admin_suggest():
         if current_user.role != 1:
             return redirect(url_for('view'))
@@ -363,14 +362,14 @@ def register_routes(app):
         # Get all reports
         reports = query.order_by(Report.date_created.desc()).all()
         return render_template('admin1.html', 
-                               reports=reports,
-                               faculties=faculties,
-                               selected_faculty=selected_faculty)    
+                                 reports=reports,
+                                 faculties=faculties,
+                                 selected_faculty=selected_faculty)    
     
     @app.route('/return')
     def home():
         return render_template('homepage.html')
-         
+        
     @app.route('/admin')
     @login_required
     def admin_dashboard():
@@ -417,7 +416,70 @@ def register_routes(app):
         except Exception as e:
             db.session.rollback()
             return jsonify({'success': False, 'error': f'Error submitting suggestion: {str(e)}'}), 500
+        
+    @app.route('/submit_comment/<int:post_id>', methods=['POST'])
+    @login_required
+    def submit_comment(post_id):
+        try:
+            data = request.get_json()
+            content = data.get('content', '').strip()
 
+            if not content:
+                return jsonify({'error': 'Empty comment'}), 400
+
+            comment = Comment(
+                suggestion_id=post_id,
+                user_id=current_user.id,
+                content=content,
+                timestamp=datetime.utcnow()
+            )
+
+            db.session.add(comment)
+            db.session.commit()
+
+            return jsonify({
+                'success': True,
+                'id': comment.id, # Return the comment ID for the HTML
+                'username': current_user.username,
+                'content': content,
+                'timestamp': comment.timestamp.strftime('%Y-%m-%d %H:%M')
+            })
+        except Exception as e:
+            db.session.rollback()
+            return jsonify({'error': f'Error submitting comment: {str(e)}'}), 500
+
+    @app.route('/delete_comment/<int:comment_id>', methods=['DELETE'])
+    @login_required
+    def delete_comment(comment_id):
+        # Ensure only admins can delete comments
+        if current_user.role != 1:
+            return jsonify({'success': False, 'error': 'Unauthorized'}), 403
+
+        comment = Comment.query.get(comment_id)
+        if not comment:
+            return jsonify({'success': False, 'error': 'Comment not found'}), 404
+
+        try:
+            db.session.delete(comment)
+            db.session.commit()
+            return jsonify({'success': True, 'message': 'Comment deleted successfully'})
+        except Exception as e:
+            db.session.rollback()
+            return jsonify({'success': False, 'error': str(e)}), 500
+
+
+    @app.route('/get_comments/<int:post_id>')
+    @login_required
+    def get_comments(post_id):
+        comments = Comment.query.filter_by(suggestion_id=post_id).order_by(Comment.timestamp.desc()).all()
+        return jsonify([
+            {
+                'id': c.id, # Include comment ID
+                'username': c.user.username,
+                'content': c.content,
+                'timestamp': c.timestamp.strftime('%Y-%m-%d %H:%M')
+            } for c in comments
+        ])
 
 
     @app.route('/suggestions')
@@ -488,8 +550,6 @@ def register_routes(app):
         return jsonify(success=True, status=status, assigned_to=assigned_to)
 
 
-    
-
     @app.route('/report/<int:report_id>/status_updates')
     @login_required
     def get_status_updates(report_id):
@@ -504,7 +564,41 @@ def register_routes(app):
             }
             for update in updates
         ])
+    
+    # --- ADDED THIS ROUTE FOR HEATMAP DATA ---
+    @app.route('/faculty_counts')
+    def faculty_counts():
+        """
+        Returns JSON counts of suggestions per faculty for the heatmap.
+        Initializes known faculties to 0 to ensure all are present.
+        """
+        # Query the database to get counts of suggestions per faculty
+        faculty_suggestions = db.session.query(
+            Suggestion.faculty,
+            func.count(Suggestion.id)
+        ).group_by(Suggestion.faculty).all()
 
+        # Initialize counts for all known faculties to 0
+        # This ensures that even faculties with no suggestions are included in the JSON response
+        # and match the keys expected by your JavaScript's `facultyCoords`.
+        counts = {
+            "MMU": 0, # Assuming MMU itself isn't a 'faculty' in Suggestions, its count will stay 0
+            "FAC": 0,
+            "FCI": 0,
+            "FOE": 0,
+            "FCA": 0,
+            "FOM": 0,
+            "FCM": 0
+        }
+
+        # Populate counts from query results
+        for faculty, count in faculty_suggestions:
+            if faculty in counts: # Only update if the faculty is one of our known ones
+                counts[faculty] = count
+            # else: You could log a warning here if unexpected faculty names appear in the DB
+
+        return jsonify(counts)
+    # --- END ADDED ROUTE ---
 
     # Add more routes as needed...
 
