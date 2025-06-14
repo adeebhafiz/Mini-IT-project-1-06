@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>View Suggestions or Complaints</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Open+Sans&display=swap" rel="stylesheet" />
+  <style>
+
+    body {
+      margin: 0;
+      padding: 0;
+      background: url('background.jpg') no-repeat center center fixed;
+      background-size: cover;
+      font-family: 'Open Sans', sans-serif;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: white;
+    }
+
+    .container {
+      display: flex; /* Make them line up side by side */
+      gap: 40px; /* Adds space between them */
+      justify-content: center; /* Center horizontally */
+      align-items: center;
+    }
+
+    .box {
+      background: rgba(0, 0, 0, 0.7);
+      padding: 60px 80px;
+      border-radius: 20px;
+      text-align: center;
+      font-family: 'Bebas Neue', cursive;
+      font-size: 36px;
+      letter-spacing: 2px;
+      cursor: pointer;
+      transition: transform 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+    }
+
+    .box:hover {
+      transform: scale(1.05);
+      background: rgba(255, 255, 255, 0.1);
+      box-shadow: 0 0 30px rgba(255, 255, 255, 0.6); /* Glow effect */
+    }
+
+    .top-right {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+    }
+
+    .top-right button {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 20px;
+      background-color: #e74c3c;
+      color: white;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: bold;
+      transition: background-color 0.3s ease;
+    }
+
+    .top-right button:hover {
+      background-color: #003d80;
+    }
+
+  </style>
+</head>
+<body>
+  <div class="top-right">
+        <form action="{{ url_for('logout') }}" method="POST">
+            <button type="submit">Log Out</button>
+        </form>
+  </div>
+
+  <div class="container">
+    <div class="box" onclick="location.href='/suggest'">Suggestions</div>
+    <div class="box" onclick="location.href='/main'">Report</div>
+    <div class="box" onclick="location.href='/review'">Report Review</div>
+  </div>
+</body>
+</html>

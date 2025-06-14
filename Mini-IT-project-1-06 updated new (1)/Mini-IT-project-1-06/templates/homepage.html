@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Welcome to my student complaint website</title> 
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Open+Sans&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-image: url('background.jpg') no-repeat center center fixed;
+      background-size: cover;
+      font-family: 'Open Sans', sans-serif;
+      height: 100vh;
+      color: #000;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .top-right-buttons {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+    }
+
+    .top-right-buttons button,
+    .top-right-buttons select {
+      margin-left: 10px;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 20px;
+      color: white;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 18px;
+      transition: transform 0.2s ease, background-color 0.3s ease;
+    }
+
+    .top-right-buttons button:hover,
+    .top-right-buttons select:hover {
+      transform: scale(1.05);
+    }
+
+    #signupDropdown {
+      background-color: #dc3545;
+      color: white;
+      padding-right: 40px;
+      position: relative;
+      border-radius: 20px;
+      font-weight: bold;
+      background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='10'%20height='10'%20viewBox='0%200%2010%2010'%3E%3Cpolygon%20points='0,0%2010,0%205,6'%20fill='white'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 15px center;
+      background-size: 12px;
+      appearance: none;
+    }
+
+    #signupDropdown:hover {
+      background-color: #c82333;
+    }
+
+    .top-right-buttons button:nth-child(2) { background-color: #0056b3; }
+    .top-right-buttons button:nth-child(3) { background-color: #000; }
+    .top-right-buttons button:nth-child(4) { background-color: #b30000; }
+
+    .content {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      z-index: 1;
+      padding: 40px;
+      background: rgba(255, 255, 255, 0.8);
+      border-radius: 20px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+      max-width: 800px;
+    }
+
+    .content h1 {
+      font-family: 'Bebas Neue', cursive;
+      font-size: 100px;
+      letter-spacing: 4px;
+      margin-bottom: 20px;
+      color: #222;
+      text-shadow: 2px 2px 5px rgba(255, 255, 255, 0.5);
+      animation: fadeIn 1.5s ease-out;
+    }
+
+    .content p {
+      font-family: 'Georgia', serif;
+      font-size: 28px;
+      margin: auto;
+      line-height: 1.6;
+      color: #333;
+    }
+
+    @keyframes fadeIn {
+      0% { opacity: 0; transform: translateY(50px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <div class="top-right-buttons">
+    
+    <select id="signupDropdown" onchange="handleSignupChange()">
+      <option selected disabled>Sign Up</option>
+      <option value="/signup">Student</option> 
+    </select>
+    <button onclick="location.href='/login'">Log In</button> 
+    <button onclick="location.href='/about'">About</button>
+  </div>
+
+  <div class="content">
+    <h1>📣 WELCOME!</h1>
+    <p>This is the student complaint and suggestion website. Your voice matters. Let’s get started and make a difference together!</p>
+  </div>
+
+  <script>
+    function handleSignupChange() {
+      const selected = document.getElementById("signupDropdown").value;
+      if (selected) {
+        localStorage.setItem('resetDropdown', 'true');
+        window.location.href = selected; 
+      }
+    }
+
+    window.onload = function() {
+      if (localStorage.getItem('resetDropdown') === 'true') {
+        document.getElementById("signupDropdown").selectedIndex = 0;
+        localStorage.removeItem('resetDropdown');
+      }
+    };
+  </script>
+</body>
+</html>
