@@ -21,33 +21,9 @@
         .form-container h2 {
             margin-bottom: 30px;
         }
-        .top-right {
-          position: absolute;
-          top: 20px;
-          right: 20px;
-        }
-
-        .top-right button {
-          padding: 12px 24px;
-          border: none;
-          border-radius: 20px;
-          background-color: #0056b3;
-          color: white;
-          cursor: pointer;
-          font-size: 16px;
-          font-weight: bold;
-          transition: background-color 0.3s ease;
-        }
-
-        .top-right button:hover {
-          background-color: #003d80;
-        }
     </style>
 </head>
 <body>
-  <div class="top-right">
-    <button onclick="location.href='/view'">Home</button>
-  </div>
     <div class="container mt-5">
         <div class="form-container">
             <h2>Submit a Suggestion</h2>
@@ -72,6 +48,7 @@
                     </select>
                 </div>
                 <button type="submit" class="btn btn-primary w-100">Submit</button>
+                <button type="button" class="btn btn-success w-100 mt-2" onclick="window.location.href='/suggestions'">View Suggestions</button>
             </form>
         </div>
     </div>
