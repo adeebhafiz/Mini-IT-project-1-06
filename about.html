@@ -8,7 +8,8 @@
     body {
       margin: 0;
       padding: 0;
-      background: url('background.jpg') no-repeat center center fixed;
+      /* Changed background URL to use Flask's url_for for static files */
+      background: url('{{ url_for('static', filename='background.jpg') }}') no-repeat center center fixed;
       background-size: cover;
       font-family: 'Open Sans', sans-serif;
       color: #fff;
@@ -17,6 +18,7 @@
       justify-content: center;
       align-items: center;
       padding: 40px;
+      position: relative;
     }
 
     .about-container {
@@ -26,6 +28,28 @@
       max-width: 900px;
       line-height: 1.8;
       box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+    }
+
+    .top-right {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+    }
+
+    .top-right button {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 20px;
+      background-color: #0056b3;
+      color: white;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: bold;
+      transition: background-color 0.3s ease;
+    }
+
+    .top-right button:hover {
+      background-color: #003d80;
     }
 
     h1 {
@@ -61,6 +85,10 @@
   </style>
 </head>
 <body>
+  <div class="top-right">
+    <button onclick="location.href='/'">Back</button>
+  </div>
+
   <div class="about-container">
     <h1>📘 About the University Complaints & Suggestions Website</h1>
     <p>Welcome to the <strong>University Complaints and Suggestions Portal</strong> — a platform designed to empower students by giving them a voice in shaping their academic environment. This website allows students to <strong>submit complaints</strong> about issues they face and to <strong>suggest improvements</strong> that can benefit the entire university community.</p>
