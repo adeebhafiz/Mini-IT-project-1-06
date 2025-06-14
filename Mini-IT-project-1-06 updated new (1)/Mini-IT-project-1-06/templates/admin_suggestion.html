@@ -23,6 +23,15 @@
       margin: 0;
       font-size: 1.9rem;
       font-weight: 600;
+      width: 100%;
+      margin-bottom: 15px;
+    }
+    .controls-container {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      width: 100%;
+      gap: 10px;
     }
     .card {
       border-radius: 15px;
@@ -61,21 +70,49 @@
       box-shadow: 0 4px 12px rgba(13, 110, 253, 0.4);
       color: #fff;
     }
-    select.form-select {
+
+    /* --- ENHANCED STYLES FOR THE STATUS DROPDOWN --- */
+    .status-select {
+      /* Sizing and basic look */
       border-radius: 8px;
-      padding: 6px 10px;
-      background-color: #f8f9fa;
-      font-size: 0.9rem;
-      margin-top: 10px;
-      max-width: 180px;
+      padding: 0.5rem 2rem 0.5rem 1rem; /* More vertical and right padding for bigger look */
+      font-size: 1rem; /* Larger font size */
+      height: auto; /* Let padding define height */
+      background-color: #fff; /* Clean white background */
+      border: 1px solid #c9d2da; /* Slightly more prominent border */
+      color: #343a40; /* Darker text for readability */
+      min-width: 160px; /* Ensure a good minimum width */
+      cursor: pointer;
+
+      /* Custom arrow for consistency */
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
+      background-repeat: no-repeat;
+      background-position: right 0.75rem center; /* Adjusted for larger padding */
+      background-size: 16px 12px;
+
+      /* Transitions for interactivity */
+      transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out, background-color 0.2s ease-in-out;
     }
-    select.form-select:focus {
-      border-color: #0d6efd;
-      box-shadow: 0 0 0 0.15rem rgba(13, 110, 253, 0.25);
+
+    .status-select:hover {
+      background-color: #f8f9fa; /* Light background on hover */
+      border-color: #a7b7c5; /* Slightly darker border on hover */
     }
-    .form-select option {
-      padding: 6px;
+
+    .status-select:focus {
+      border-color: #0d6efd; /* Bootstrap primary blue on focus */
+      outline: 0;
+      box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25); /* More prominent focus ring */
     }
+
+    /* Specific colors for options if desired, can be added here or in JS */
+    /* .status-select option[value="Pending"] { color: #ffc107; } /* Warning yellow */
+    /* .status-select option[value="In Progress"] { color: #17a2b8; } /* Info blue */
+    /* .status-select option[value="Resolved"] { color: #28a745; } /* Success green */
+
+    /* --- END ENHANCED STYLES --- */
+
     .comments p {
       background-color: #fff;
       border-left: 4px solid #0d6efd;
@@ -83,6 +120,7 @@
       margin-bottom: 10px;
       border-radius: 8px;
       font-size: 0.9rem;
+      position: relative;
     }
     .comments small {
       font-size: 0.75rem;
@@ -91,13 +129,6 @@
     textarea.form-control {
       border-radius: 8px;
       resize: none;
-    }
-    select.form-select.form-select-sm.mt-2 {
-      padding: 0.25rem 0.5rem;
-      font-size: 0.85rem;
-      width: auto;
-      max-width: 160px;
-      margin-top: 0.5rem;
     }
     .top-right {
       position: absolute;
@@ -120,17 +151,32 @@
     .top-right button:hover {
       background-color: #003d80;
     }
+
+    .delete-comment-icon {
+      position: absolute;
+      top: 5px;
+      right: 10px;
+      cursor: pointer;
+      color: #dc3545;
+      font-size: 0.9rem;
+      opacity: 0.7;
+      transition: opacity 0.2s ease;
+    }
+
+    .delete-comment-icon:hover {
+      opacity: 1;
+    }
   </style>
 </head>
 <body>
   <div class="top-right">
-        <button onclick="location.href='/viewadmin'">View Admin Options</button>
-    </div>
+    <button onclick="location.href='/viewadmin'">View Admin Options</button>
+  </div>
   <div class="container mt-5">
-    <div class="admin-header d-flex justify-content-between align-items-center flex-wrap">
+    <div class="admin-header">
       <h2>Admin Suggestions Dashboard</h2>
-      <div class="d-flex flex-wrap align-items-center mt-3 mt-md-0">
-        <div class="input-group me-2" style="max-width: 250px;">
+      <div class="controls-container">
+        <div class="input-group" style="max-width: 250px;">
           <input
             type="text"
             id="searchInput"
@@ -141,7 +187,7 @@
           />
           <span class="input-group-text"><i class="fas fa-search"></i></span>
         </div>
-        <div class="dropdown me-2">
+        <div class="dropdown">
           <button
             class="btn btn-light dropdown-toggle"
             type="button"
@@ -173,7 +219,6 @@
           </button>
           <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="SortDropdown" id="sortDropdownMenu">
             <li><a href="#" class="dropdown-item" onclick="sortByVotes(event)"><i class="fas fa-arrow-up-wide-short me-2"></i> Upvoted</a></li>
-            <li><a href="#" class="dropdown-item" onclick="sortByStatus(event)"><i class="fas fa-list-check me-2"></i> Status</a></li>
           </ul>
         </div>
       </div>
@@ -196,7 +241,7 @@
           <label for="statusSelect{{ suggestion.id }}">Status:</label>
           <select
             id="statusSelect{{ suggestion.id }}"
-            class="form-select form-select-sm mt-2"
+            class="status-select mt-2"
             onchange="updateStatus({{ suggestion.id }}, this.value)"
           >
             <option value="Pending" {% if suggestion.status == 'Pending' %}selected{% endif %}>Pending</option>
@@ -204,9 +249,11 @@
             <option value="Resolved" {% if suggestion.status == 'Resolved' %}selected{% endif %}>Resolved</option>
           </select>
 
-          <button class="btn btn-primary mt-3" onclick="toggleComments(this)">View Comments</button>
+          <button class="btn btn-primary mt-3" onclick="toggleCommentBox(this)">Add Comments</button>
           <div class="comment-box d-none mt-3">
-            <div class="comments"></div>
+            <div class="comments mb-3"></div>
+            <textarea class="form-control mb-2" rows="2" placeholder="Write a comment..."></textarea>
+            <button class="btn btn-sm btn-success" onclick="submitComment(this)">Submit Comment</button>
           </div>
         </div>
       </div>
@@ -216,16 +263,20 @@
     </div>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
   <script>
     let selectedFaculty = "All";
 
-    function toggleComments(button) {
+    function toggleCommentBox(button) {
       const cardBody = button.closest(".card-body");
       const commentBox = cardBody.querySelector(".comment-box");
-      commentBox.classList.toggle("d-none");
+      const isHidden = commentBox.classList.contains("d-none");
 
-      if (!commentBox.classList.contains("loaded")) {
-        const postId = cardBody.closest(".card").dataset.id;
+      commentBox.classList.toggle("d-none"); // Toggle visibility
+      button.textContent = isHidden ? "Hide Comments" : "Add Comments"; // Change button text
+
+      const postId = cardBody.closest(".card").dataset.id;
+      if (isHidden && !commentBox.classList.contains("loaded")) {
         fetch(`/get_comments/${postId}`)
           .then((res) => res.json())
           .then((data) => {
@@ -233,14 +284,80 @@
             commentsContainer.innerHTML = data
               .map(
                 (c) =>
-                  `<p><strong>${c.username}:</strong> ${c.content}<br><small class="text-muted">${c.timestamp}</small></p>`
+                  `<p data-comment-id="${c.id}"><strong>${c.username}:</strong> ${c.content}<br><small class="text-muted">${c.timestamp}</small><i class="fas fa-trash-alt delete-comment-icon" onclick="deleteComment(${c.id}, this)"></i></p>`
               )
               .join("");
             commentBox.classList.add("loaded");
           })
-          .catch(() => {
-            commentBox.querySelector(".comments").innerHTML =
-              "<p>Error loading comments.</p>";
+          .catch((error) => {
+            console.error("Error loading comments:", error);
+            commentsContainer.innerHTML = "<p>Error loading comments.</p>";
+          });
+      }
+    }
+
+    function submitComment(button) {
+      const cardBody = button.closest(".card-body");
+      const commentBox = cardBody.querySelector(".comment-box");
+      const textarea = commentBox.querySelector("textarea");
+      const content = textarea.value.trim();
+      const postId = cardBody.closest(".card").dataset.id;
+
+      if (!content) {
+        alert("Please enter a comment.");
+        return;
+      }
+
+      fetch(`/submit_comment/${postId}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ content: content }),
+      })
+        .then((res) => {
+          if (!res.ok) throw new Error("Network response was not ok");
+          return res.json();
+        })
+        .then((newComment) => {
+          const commentsContainer = commentBox.querySelector(".comments");
+          const newCommentHTML = `<p data-comment-id="${newComment.id}"><strong>${newComment.username}:</strong> ${newComment.content}<br><small class="text-muted">${newComment.timestamp}</small><i class="fas fa-trash-alt delete-comment-icon" onclick="deleteComment(${newComment.id}, this)"></i></p>`;
+          commentsContainer.insertAdjacentHTML("beforeend", newCommentHTML);
+          textarea.value = "";
+        })
+        .catch((error) => {
+          console.error("Error submitting comment:", error);
+          alert("Error submitting comment.");
+        });
+    }
+
+    function deleteComment(commentId, iconElement) {
+      if (confirm('Are you sure you want to delete this comment?')) {
+        fetch(`/delete_comment/${commentId}`, {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+          .then((res) => {
+            if (!res.ok) {
+              if (res.status === 403) {
+                alert("You are not authorized to delete comments.");
+              }
+              throw new Error("Network response was not ok");
+            }
+            return res.json();
+          })
+          .then((data) => {
+            if (data.success) {
+              iconElement.closest('p').remove();
+            } else {
+              alert(data.error || "Failed to delete comment.");
+            }
+          })
+          .catch((error) => {
+            console.error("Error deleting comment:", error);
+            alert("Error deleting comment.");
           });
       }
     }
@@ -250,10 +367,10 @@
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          // Include CSRF token header here if needed by your backend
         },
         body: JSON.stringify({ status: newStatus }),
-      }).catch(() => {
+      }).catch((error) => {
+        console.error("Failed to update status:", error);
         alert("Failed to update status");
       });
     }
@@ -269,20 +386,6 @@
       cards.forEach((card) => container.appendChild(card));
     }
 
-    function sortByStatus(event) {
-      event.preventDefault();
-      const statusOrder = { "Pending": 1, "In Progress": 2, "Resolved": 3 };
-      const container = document.getElementById("suggestions");
-      const cards = Array.from(container.querySelectorAll(".suggestion-card"));
-      cards.sort((a, b) => {
-        const aStatus = a.querySelector("select").value;
-        const bStatus = b.querySelector("select").value;
-        return statusOrder[aStatus] - statusOrder[bStatus];
-      });
-      container.innerHTML = "";
-      cards.forEach((card) => container.appendChild(card));
-    }
-
     function filterSuggestions() {
       const searchInput = document.getElementById("searchInput").value.toLowerCase();
       const container = document.getElementById("suggestions");
@@ -291,36 +394,25 @@
       cards.forEach((card) => {
         const text = card.dataset.search;
         const faculty = card.querySelector(".card-subtitle").textContent.trim();
-
-        // Check faculty filter
         const facultyMatch = selectedFaculty === "All" || faculty === selectedFaculty;
-
-        // Check search text
         const searchMatch = text.includes(searchInput);
-
         card.style.display = facultyMatch && searchMatch ? "" : "none";
       });
     }
 
-    // Faculty filter dropdown logic
     document.querySelectorAll("#facultyDropdownMenu .dropdown-item").forEach((item) => {
       item.addEventListener("click", (e) => {
         e.preventDefault();
         selectedFaculty = e.target.dataset.faculty === "All" ? "All" : e.target.dataset.faculty;
         document.getElementById("selectedFaculty").textContent =
           selectedFaculty === "All" ? "All Faculties" : selectedFaculty;
-
-        // Update active class on dropdown items
         document.querySelectorAll("#facultyDropdownMenu .dropdown-item").forEach((el) => {
           el.classList.remove("active");
         });
         e.target.classList.add("active");
-
         filterSuggestions();
       });
     });
   </script>
-
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
