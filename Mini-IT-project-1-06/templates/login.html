@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Login</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+  <style>
+    body {
+      background: url('{{ url_for('static', filename='background.jpg') }}') no-repeat center center fixed;
+      background-size: cover;
+      font-family: 'Open Sans', sans-serif;
+      height: 100vh;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      position: relative; /* Added for absolute positioning of the home button */
+    }
+
+    /* New style for the Home button */
+    .home-button {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 10px; /* Slightly less rounded than the main buttons */
+      background-color: #00274d; /* Using the dark blue from your other pages */
+      color: white;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 16px;
+      text-decoration: none; /* In case you use an anchor tag */
+      display: inline-flex; /* To align icon and text */
+      align-items: center;
+      gap: 5px; /* Space between icon and text */
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .home-button:hover {
+      background-color: #001f3f; /* Darker shade on hover */
+      transform: translateY(-2px);
+    }
+
+    .form-box {
+      background: rgba(0, 0, 0, 0.6);
+      padding: 40px;
+      border-radius: 20px;
+      text-align: center;
+      width: 350px;
+    }
+
+    .form-box h2 {
+      margin-bottom: 20px;
+      font-size: 32px;
+    }
+
+    .form-box input {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+    }
+
+    .form-box button {
+      margin-top: 20px;
+      background: #007bff;
+      color: white;
+      padding: 14px 28px;
+      font-size: 22px;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .form-box button:hover {
+      background: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <button class="home-button" onclick="window.location.href='/'">
+    <i class="fas fa-home"></i> Home
+  </button>
+
+  <div class="form-box">
+    <h2>Log In</h2>
+    <form method="POST" action="{{ url_for('login') }}">
+      <input type="text" name="username" placeholder="Username" required />
+      <input type="password" name="password" placeholder="Password" required />
+      <button type="submit">LOG IN</button>
+    </form>
+  </div>
+</body>
+</html>
