@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>View Suggestions or Reports</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Open+Sans&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+  <style>
+    body {
+      /* Ensure background.jpg is in your 'static' folder for this to work with Flask */
+      background: url('{{ url_for('static', filename='background.jpg') }}') no-repeat center center fixed;
+      background-size: cover;
+      font-family: 'Open Sans', sans-serif;
+      height: 100vh;
+      margin: 0;
+      padding: 0; /* Added padding to prevent content from touching edges if button is at top */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      position: relative; /* Added for absolute positioning of the home button */
+    }
+
+    /* New style for the Home button, consistent with login.html */
+    .home-button {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 10px;
+      background-color: #00274d; /* Dark blue */
+      color: white;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 16px;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .home-button:hover {
+      background-color: #001f3f; /* Darker shade on hover */
+      transform: translateY(-2px);
+    }
+
+    .container {
+      display: flex; /* Make them line up side by side */
+      gap: 40px; /* Adds space between them */
+      justify-content: center; /* Center horizontally */
+      align-items: center;
+    }
+
+    .box {
+      background: rgba(0, 0, 0, 0.7);
+      padding: 60px 80px;
+      border-radius: 20px;
+      text-align: center;
+      font-family: 'Bebas Neue', cursive;
+      font-size: 36px;
+      letter-spacing: 2px;
+      cursor: pointer;
+      transition: transform 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+    }
+
+    .box:hover {
+      transform: scale(1.05);
+      background: rgba(255, 255, 255, 0.1);
+      box-shadow: 0 0 30px rgba(255, 255, 255, 0.6); /* Glow effect */
+    }
+  </style>
+</head>
+<body>
+  <!-- Home Button Added Here -->
+  <button class="home-button" onclick="window.location.href='/'">
+    <i class="fas fa-home"></i> Home
+  </button>
+
+  <div class="container">
+    <div class="box" onclick="location.href='/suggest'">Suggestions</div>
+    <div class="box" onclick="location.href='/main'">Report</div>
+  </div>
+</body>
+</html>

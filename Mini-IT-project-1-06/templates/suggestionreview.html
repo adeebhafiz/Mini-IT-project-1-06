@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>All Suggestions</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+  <style>
+    body {
+      background-color: #306cb7;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: #266aae;
+    }
+
+    /* New style for the vote count */
+    .vote-count-display {
+      color: #00274d; /* Dark blue, matching your primary buttons and headings */
+      font-weight: bold; /* Make it bold */
+      font-size: 1.1em; /* Slightly larger than surrounding text */
+      margin-left: 5px; /* Add a little space from the button */
+    }
+
+    h2 {
+      font-weight: bold;
+      color: #00274d;
+    }
+
+    .card {
+      border-radius: 15px;
+      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.1);
+      border: none;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      background-color: #ffffff;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.15);
+    }
+
+    .card-title {
+      color: #00274d;
+      font-size: 1.25rem;
+      font-weight: 600;
+    }
+
+    .card-subtitle {
+      color: #6c757d;
+      font-size: 0.95rem;
+    }
+
+    .btn-success {
+      background-color: #ffcc00;
+      color: #00274d;
+      border: none;
+    }
+
+    .btn-success:hover {
+      background-color: #e6b800;
+      color: #000;
+    }
+
+    .btn-primary {
+      background-color: #00274d;
+      border: none;
+    }
+
+    .btn-primary:hover {
+      background-color: #001f3f;
+    }
+
+    .dropdown-menu {
+      border-radius: 10px;
+      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.1);
+    }
+
+    .dropdown-item:hover {
+      background-color: #ffcc00;
+      color: #00274d;
+      font-weight: 500;
+    }
+
+    .badge.bg-secondary {
+      background-color: #00274d !important;
+    }
+
+    .btn-link {
+      color: #00274d;
+      font-weight: 600;
+    }
+
+    .btn-link:hover {
+      color: #001f3f;
+      text-decoration: underline;
+    }
+
+    .comment-box {
+      background-color: #f9f9f9;
+      border-left: 4px solid #00274d;
+      padding: 10px 15px;
+      border-radius: 10px;
+      transition: all 0.3s ease-in-out;
+    }
+
+    textarea.form-control {
+      border-radius: 8px;
+      resize: vertical;
+    }
+
+    #searchInput {
+      border-radius: 8px;
+      border: 1px solid #ced4da;
+      padding: 8px 12px;
+    }
+
+    @media (max-width: 576px) {
+      .d-flex.flex-wrap.gap-2 {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      #searchInput {
+        width: 100%;
+      }
+
+      .dropdown {
+        width: 100%;
+      }
+
+      .dropdown .btn {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="header-custom-dark-blue text-white py-2 px-4 mb-4 rounded shadow-sm d-flex justify-content-between align-items-center">
+    <h4 class="mb-0"><i class="fas fa-university me-2"></i>MMU Suggestion Board</h4>
+    <button type="button" class="btn btn-light btn-sm" onclick="window.location.href='/'">
+      <i class="fas fa-home me-1"></i> Home
+    </button>
+  </header>
+
+  <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+    <h2 class="mb-0">All Suggestions</h2>
+    <div class="d-flex align-items-center gap-2">
+      <input type="text" id="searchInput" class="form-control" placeholder="Search..." onkeyup="filterSuggestions()" />
+      <div class="dropdown">
+        <button class="btn btn-primary dropdown-toggle" type="button" id="SortDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+          <i class="fas fa-filter me-1"></i> Sort
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="SortDropdown">
+          <li><a class="dropdown-item" href="#" onclick="sortByVotes()"><i class="fas fa-arrow-up-wide-short me-2"></i> Upvoted</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div id="posts">
+    {% for post in posts %}
+    <div class="card mb-3 suggestion-card"
+      data-id="{{ post.id }}"
+      data-votes="{{ post.votes }}"
+      data-search="{{ post.suggestion }} {{ post.faculty }} {{ post.reason }}">
+      <div class="card-body">
+        <h5 class="card-title">{{ post.suggestion }}</h5>
+        <h6 class="card-subtitle mb-2 text-muted">{{ post.faculty }}</h6>
+        <p>{{ post.reason }}</p>
+        <button class="btn btn-sm btn-success" data-id="{{ post.id }}" onclick="upvote(this)">Upvote</button>
+        <span id="votes-{{ post.id }}" class="vote-count-display">{{ post.votes }} votes</span> {# <-- Changed here #}
+        <span class="badge bg-secondary ms-2">{{ post.status or 'Pending ⏳' }}</span>
+        <button class="btn btn-link" onclick="toggleCard(this)">View Comments</button>
+
+        <div class="comment-box mt-3 d-none">
+          <div class="comments mb-3" id="comments-{{ post.id }}"></div>
+
+          {% if current_user.username == post.username or current_user.role == 'admin' %}
+          <form method="POST" action="/comment/{{ post.id }}">
+            <textarea name="content" class="form-control mb-2" required></textarea>
+            <button type="submit" class="btn btn-primary btn-sm">Reply</button>
+          </form>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    function upvote(button) {
+      const id = button.getAttribute('data-id');
+      fetch('/upvote/' + id, { method: 'POST' })
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            document.getElementById('votes-' + id).textContent = data.votes + ' votes';
+          } else {
+            alert('Failed to upvote: ' + data.error); // Added data.error for better feedback
+          }
+        });
+    }
+
+    function sortByVotes() {
+      const postsContainer = document.getElementById('posts');
+      const cards = Array.from(postsContainer.getElementsByClassName('card'));
+      cards.sort((a, b) => parseInt(b.getAttribute('data-votes')) - parseInt(a.getAttribute('data-votes')));
+      postsContainer.innerHTML = '';
+      cards.forEach(card => postsContainer.appendChild(card));
+    }
+
+    function sortByStatus() {
+      const postsContainer = document.getElementById('posts');
+      const cards = Array.from(postsContainer.getElementsByClassName('card'));
+      cards.sort((a, b) =>
+        a.querySelector('.badge').textContent.toLowerCase().localeCompare(
+          b.querySelector('.badge').textContent.toLowerCase()
+        )
+      );
+      postsContainer.innerHTML = '';
+      cards.forEach(card => postsContainer.appendChild(card));
+    }
+
+    function toggleCard(button) {
+      const card = button.closest('.suggestion-card');
+      const box = card.querySelector('.comment-box');
+
+      // Close other open comment boxes
+      document.querySelectorAll('.suggestion-card .comment-box').forEach(el => {
+        if (el !== box) {
+          el.classList.add('d-none');
+          el.classList.remove('loaded'); // Reset loaded state for others
+        }
+      });
+
+      box.classList.toggle('d-none');
+      if (!box.classList.contains('d-none') && !box.classList.contains('loaded')) {
+        const id = card.getAttribute('data-id');
+        fetch('/get_comments/' + id)
+          .then(res => res.json())
+          .then(data => {
+            const commentBox = document.getElementById('comments-' + id);
+            commentBox.innerHTML = data.map(
+              c => `<div class="border-bottom mb-2"><strong>${c.username}:</strong> ${c.content}<br><small class="text-muted">${c.timestamp}</small></div>`
+            ).join('');
+            box.classList.add('loaded');
+          });
+      }
+    }
+
+    document.addEventListener('click', function (e) {
+      // If click is outside any suggestion card, hide all comment boxes
+      if (!e.target.closest('.suggestion-card')) {
+        document.querySelectorAll('.comment-box').forEach(el => {
+          el.classList.add('d-none');
+          el.classList.remove('loaded'); // Reset loaded state
+        });
+      }
+    });
+
+    function filterSuggestions() {
+      const query = document.getElementById("searchInput").value.toLowerCase();
+      const cards = document.querySelectorAll(".suggestion-card");
+
+      cards.forEach(card => {
+        const text = card.getAttribute("data-search").toLowerCase();
+        card.style.display = text.includes(query) ? "" : "none";
+      });
+    }
+  </script>
+</body>
+</html>
